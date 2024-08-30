@@ -1,0 +1,82 @@
+---
+title: "CTT for Test analysis"
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_depth: 3  # upto three depths of headings
+    toc_float: 
+      collapsed: false
+      smooth_scroll: false
+date: "2023-12-22"
+author: "Nguyễn Việt Dũng (Neo)"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 5.1 CTT coefficient
+
+```{r packages, eval=FALSE, include=FALSE}
+#run once each iteration
+install.packages("CTT")
+```
+
+```{r library, include=FALSE}
+#CTT library is available for quick calculation of indexes
+library(CTT)
+```
+
+```{r import, echo=FALSE}
+#import data
+data <- read.csv("toan_de1_cleaned.csv")
+str(data)
+```
+
+```{r report, echo=FALSE}
+#use function itemAnalysis to analyze data with CTT
+#pBisFlag highlights item with pBis lower than 0.2
+#easyFlag highlights easy item (Difficulty > 0.75)
+#hardFlag highlights hard item (Difficulty < 0.25)
+CTT_analysis <- itemAnalysis(data, 
+                             pBisFlag = 0.2, 
+                             easyFlag = 0.75) 
+
+# itemMean as Difficulty
+# pBis = point-biserial, bis = biserial as Discrimination
+# alphaIfDeleted = Cronbach's alpha of whole test if item removed
+CTT_analysis$itemReport
+```
+
+Alpha:
+
+```{r alpha, echo=FALSE}
+#Crobach's alpha as test reliability
+alpha <- CTT_analysis$alpha
+alpha
+```
+
+SEM:
+
+```{r SEM, echo=FALSE}
+st_raw_score <- rowSums(data)
+SEM <- sqrt((1-alpha)*var(st_raw_score))
+SEM
+```
+
+```{r include=FALSE}
+ci <- 95/100 #confidence interval is 95%
+Z <- qnorm((ci+1)/2)
+Z
+```
+
+Tính khoảng điểm thực với khoảng tin cậy (confidence interval) là 95%
+
+```{r echo=FALSE}
+st_T_low <- st_raw_score - SEM*Z
+st_T_high <- st_raw_score + SEM*Z
+st_score <- cbind(st_raw_score,st_T_low,st_T_high)
+head(st_score)
+```
+
+### 

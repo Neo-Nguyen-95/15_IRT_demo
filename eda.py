@@ -2,6 +2,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 df = pd.read_csv('toan_de1.csv', index_col='student_id')
 
@@ -35,3 +36,4 @@ sns.histplot(data=df_filter, x='raw_score')
 
 #%% EXPORT FOR IRT ANALYSIS
 df_filter.iloc[:, 0:40].to_csv('toan_de1_cleaned.csv', index=False)
+

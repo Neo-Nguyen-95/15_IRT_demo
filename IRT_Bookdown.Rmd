@@ -1,0 +1,112 @@
+---
+title: "IRT for Test analysis"
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_depth: 3  # upto three depths of headings
+date: "2023-12-23"
+name: "Nguyễn Việt Dũng"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Phân tích IRT
+
+Preparation
+
+```{r eval=FALSE, include=FALSE}
+getwd()
+```
+
+```{r eval=FALSE, include=FALSE}
+install.packages("WrightMap")
+install.packages("mirt")
+install.packages("latticeExtra")
+install.packages("ShinyItemAnalysis")
+```
+
+```{r include=FALSE}
+library(WrightMap)
+library(mirt)
+library(latticeExtra)
+library(ShinyItemAnalysis)
+```
+
+```{r}
+st_data <- read.csv("toan_de1_cleaned.csv")
+str(st_data)
+```
+
+### 2PL - Two parameter logistic model
+
+```{r include=FALSE}
+M2 <- mirt(st_data,
+           model = 1,
+           itemtype = "2PL")
+```
+
+```{r}
+item_2PL <- coef(M2,
+                 IRTpars = TRUE,
+                 simplify = TRUE)
+
+item_2PL$items
+```
+
+```{r}
+person_2PL <- fscores(M2,
+                      method = "WLE",
+                      full.scores.SE = TRUE)
+head(person_2PL)
+```
+
+```{r}
+#fit statistic of the model 
+fit_2PL <- itemfit(M2, fit_stats = 'infit')
+
+fit_2PL
+```
+
+Analysis
+
+```{r}
+#plot ICC
+plot(M2, type='trace')
+```
+
+```{r}
+itemfit(M2,
+        empirical.plot=1) #input item number here
+```
+
+```{r}
+plot(M2, type='infotrace',
+     facet_items=TRUE)
+```
+
+```{r}
+plot(M2, type='infoSE')
+```
+
+```{r}
+#create theta value vector
+theta_2PL <- as.vector(person_2PL)
+
+#create difficulty data frame vector
+parameter_2PL <- as.data.frame(item_2PL$items)
+
+#to have a suitable Wright Map, we need to remove outlier
+#item 14, 26, 26 are too small => remove from the graph
+parameter_2PL_correction <- parameter_2PL[-c(11, 14, 30),] 
+item.labs = rownames(parameter_2PL_correction)
+
+#plot Wright Map
+wrightMap(theta_2PL, parameter_2PL_correction$b,
+         item.side = itemHist, #use itemClassic/itemModern if we can show all item
+         item.prop = 0.5,
+         label.items = item.labs)
+```
+
+### 
