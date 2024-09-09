@@ -35,7 +35,7 @@ library(ShinyItemAnalysis)
 ```
 
 ```{r}
-st_data <- read.csv("toan_de1_cleaned.csv")
+st_data <- read.csv("dochieu_de1_cleaned.csv")
 str(st_data)
 ```
 
@@ -78,7 +78,7 @@ plot(M2, type='trace')
 
 ```{r}
 itemfit(M2,
-        empirical.plot=1) #input item number here
+        empirical.plot=18) #input item number here
 ```
 
 ```{r}

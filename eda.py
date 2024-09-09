@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-df = pd.read_csv('toan_de1.csv', index_col='student_id')
+# df = pd.read_csv('toan_de1.csv', index_col='student_id')
+# df = pd.read_csv('khoahoc_de1.csv', index_col='student_id')
+df = pd.read_csv('dochieu_de1.csv', index_col='student_id')
 
 #%% EDA
 # filter student with more than 25% of NA value (10 blank items)
@@ -35,5 +37,7 @@ plt.figure(dpi=200)
 sns.histplot(data=df_filter, x='raw_score')
 
 #%% EXPORT FOR IRT ANALYSIS
-df_filter.iloc[:, 0:40].to_csv('toan_de1_cleaned.csv', index=False)
+# df_filter.iloc[:, 0:40].to_csv('toan_de1_cleaned.csv', index=False)
+# df_filter.iloc[:, 0:40].to_csv('khoahoc_de1_cleaned.csv', index=False)
+# df_filter.iloc[:, 0:20].to_csv('dochieu_de1_cleaned.csv', index=False)
 
